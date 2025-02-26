@@ -1,0 +1,53 @@
+{
+  "name": "sismics-docs",
+  "description": "Lightweight document management system",
+  "readme": "See http://github.com/simics/docs for more informations.",
+  "license": "GPL-2.0",
+  "version": "1.5.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sismics/docs.git"
+  },
+  "apidoc": {
+    "name": "Teedy API",
+    "title": "Teedy API",
+    "url": "/api",
+    "template": {
+      "withCompare": false,
+      "withGenerator": false
+    },
+    "order": [
+      "User",
+      "Group",
+      "Document",
+      "File",
+      "Tag",
+      "Comment",
+      "Share",
+      "Acl",
+      "Auditlog",
+      "App",
+      "Theme",
+      "Vocabulary"
+    ],
+    "header": {
+      "title": "Getting started",
+      "filename": "header.md"
+    }
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-angular-templates": "^1.1.0",
+    "grunt-apidoc": "^0.11.0",
+    "grunt-cleanempty": "^1.0.4",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-less": "^1.4.1",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-css": "^0.5.4",
+    "grunt-htmlrefs": "^0.5.0",
+    "grunt-ng-annotate": "^2.0.2",
+    "grunt-text-replace": "^0.4.0"
+  }
+}

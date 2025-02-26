@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <parent>
+    <groupId>com.sismics.docs</groupId>
+    <artifactId>docs-parent</artifactId>
+    <version>1.12-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>docs-web</artifactId>
+  <packaging>war</packaging>
+  <name>Docs Web</name>
+
+  <dependencies>
+    <!-- Dependencies to Docs -->
+    <dependency>
+      <groupId>com.sismics.docs</groupId>
+      <artifactId>docs-core</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.sismics.docs</groupId>
+      <artifactId>docs-web-common</artifactId>
+    </dependency>
+    
+    <!-- Dependencies to Jersey -->
+    <dependency>
+      <groupId>org.glassfish.jersey.containers</groupId>
+      <artifactId>jersey-container-servlet</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-json-processing</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-multipart</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.inject</groupId>
+      <artifactId>jersey-hk2</artifactId>
+    </dependency>
+      
+    <!-- Other external dependencies -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+  
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>com.sismics.docs</groupId>
+      <artifactId>docs-web-common</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+      <artifactId>jersey-test-framework-provider-bundle</artifactId>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+      <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.containers</groupId>
+      <artifactId>jersey-container-grizzly2-servlet</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.subethamail</groupId>
+      <artifactId>subethasmtp-wiser</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.icegreen</groupId>
+      <artifactId>greenmail</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.directory.server</groupId>
+      <artifactId>apacheds-all</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+  </build>
+
+  <profiles>
+    <!-- Development profile (active by default) -->
+    <profile>
+      <id>dev</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>env</name>
+          <value>dev</value>
+        </property>
+      </activation>
+      
+      <build>
+        <resources>
+          <resource>
+            <directory>src/dev/resources</directory>
+            <filtering>false</filtering>
+            <excludes>
+              <exclude>**/config.properties</exclude>
+            </excludes>
+          </resource>
+          <resource>
+            <directory>src/dev/resources</directory>
+            <filtering>true</filtering>
+            <includes>
+              <include>**/config.properties</include>
+            </includes>
+          </resource>
+        </resources>
+
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <configuration>
+              <systemProperties>
+                <application.mode>dev</application.mode>
+                <docs.home>../data/docs</docs.home>
+              </systemProperties>
+              <webApp>
+                <contextPath>/docs-web</contextPath>
+                <overrideDescriptor>${project.basedir}/src/dev/main/webapp/web-override.xml</overrideDescriptor>
+              </webApp>
+            </configuration>
+          </plugin>
+          
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <forkCount>1</forkCount>
+              <reuseForks>false</reuseForks>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    
+    <!-- Production profile -->
+    <profile>
+      <id>prod</id>
+      
+      <build>
+        <resources>
+          <resource>
+            <directory>src/prod/resources</directory>
+            <filtering>false</filtering>
+            <excludes>
+              <exclude>**/config.properties</exclude>
+            </excludes>
+          </resource>
+          <resource>
+            <directory>src/prod/resources</directory>
+            <filtering>true</filtering>
+            <includes>
+              <include>**/config.properties</include>
+            </includes>
+          </resource>
+        </resources>
+        
+        <plugins>
+        
+          <!-- Launch NPM & Grunt -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <target name="building">
+                    <!-- npm install -->
+                    <exec executable="cmd" dir="${project.basedir}/src/main/webapp" osfamily="windows" failonerror="true">
+                      <arg line="/c npm install" />
+                    </exec>
+                    <exec executable="npm" dir="${project.basedir}/src/main/webapp" osfamily="unix" failonerror="true">
+                      <arg line="install" />
+                    </exec>
+                    <!-- grunt -->
+                    <exec executable="cmd" dir="${project.basedir}/src/main/webapp" osfamily="windows" failonerror="true">
+                      <arg line="/c grunt --apiurl=api" />
+                    </exec>
+                    <exec executable="grunt" dir="${project.basedir}/src/main/webapp" osfamily="unix" failonerror="true">
+                      <arg line="--apiurl=api" />
+                    </exec>
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        
+          <!-- WAR generation -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <configuration>
+              <warSourceDirectory>${project.basedir}/src/main/webapp/dist</warSourceDirectory>
+              <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
