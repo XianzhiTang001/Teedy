@@ -61,6 +61,7 @@
     <org.apache.maven.plugins.maven-war-plugin.version>3.3.2</org.apache.maven.plugins.maven-war-plugin.version>
     <org.apache.maven.plugins.maven-surefire-plugin.version>3.0.0</org.apache.maven.plugins.maven-surefire-plugin.version>
     <org.apache.maven.plugins.maven-site-plugin.version>3.20.0</org.apache.maven.plugins.maven-site-plugin.version>
+    <org.apache.maven.plugins.maven-pmd-plugin.version>3.26.0</org.apache.maven.plugins.maven-pmd-plugin.version>
     <org.eclipse.jetty.jetty-maven-plugin.version>11.0.20</org.eclipse.jetty.jetty-maven-plugin.version>
   </properties>
 
@@ -116,6 +117,25 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <version>${org.apache.maven.plugins.maven-site-plugin.version}</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>${org.apache.maven.plugins.maven-pmd-plugin.version}</version>
+        <configuration>
+          <rulesets>
+            <ruleset>customize-rules.xml</ruleset>
+          </rulesets>
+          <failOnViolation>false</failOnViolation>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
@@ -497,6 +517,22 @@
 
     </dependencies>
   </dependencyManagement>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>${org.apache.maven.plugins.maven-pmd-plugin.version}</version>
+        <configuration>
+          <rulesets>
+            <ruleset>customize-rules.xml</ruleset>
+          </rulesets>
+          <failOnViolation>false</failOnViolation>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 
   <distributionManagement>
     <site>
