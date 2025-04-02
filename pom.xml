@@ -60,6 +60,7 @@
     <org.apache.maven.plugins.maven-jar-plugin.version>3.3.0</org.apache.maven.plugins.maven-jar-plugin.version>
     <org.apache.maven.plugins.maven-war-plugin.version>3.3.2</org.apache.maven.plugins.maven-war-plugin.version>
     <org.apache.maven.plugins.maven-surefire-plugin.version>3.0.0</org.apache.maven.plugins.maven-surefire-plugin.version>
+    <org.apache.maven.plugins.maven-site-plugin.version>3.20.0</org.apache.maven.plugins.maven-site-plugin.version>
     <org.eclipse.jetty.jetty-maven-plugin.version>11.0.20</org.eclipse.jetty.jetty-maven-plugin.version>
   </properties>
 
@@ -109,6 +110,12 @@
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>${org.apache.maven.plugins.maven-site-plugin.version}</version>
       </plugin>
 
       <plugin>
@@ -491,4 +498,10 @@
     </dependencies>
   </dependencyManagement>
 
+  <distributionManagement>
+    <site>
+      <id>local-site</id>
+      <url>file:///Users/tang2004/Teedy/stage</url>
+    </site>
+  </distributionManagement>
 </project>
