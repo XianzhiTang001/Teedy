@@ -40,8 +40,8 @@ pipeline {
                     // sign in Docker Hub
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_credentials') {
                         // push image
-docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push() // :optional: label latest
-docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push('latest')
+                        docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push() // :optional: label latest
+                        docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push('latest')
                     }
             }
         }
