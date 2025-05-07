@@ -6,7 +6,7 @@ pipeline {
     }
     environment {
         // define environment variable
-        // Jenkins credentials configuration
+        // Jenkins credentials configurationDOCKER_HUB_CREDENTIALS
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub_credentials') // Docker Hub credentials ID store in Jenkins
         // Docker Hub Repository's name
         DOCKER_IMAGE = 'xianzhitang/teedy-app' // your Docker Hub user name and Repository's name
@@ -37,7 +37,7 @@ pipeline {
             steps {
                 script {
                     // sign in Docker Hub
-                    docker.withRegistry('https://registry.hub.docker.com', 'DOCKER_HUB_CREDENTIALS') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_credentials') {
                         // push image
 docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push() // :optional: label latest
 docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push('latest')
