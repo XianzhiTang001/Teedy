@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    tools {
+        // Use the name defined in Global Tool Configuration
+        jdk 'OpenJDK 17'
+    }
     environment {
         // define environment variable
         // Jenkins credentials configuration
