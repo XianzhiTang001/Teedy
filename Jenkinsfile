@@ -11,7 +11,6 @@ pipeline {
         // Docker Hub Repository's name
         DOCKER_IMAGE = 'xianzhitang/teedy-app' // your Docker Hub user name and Repository's name
         DOCKER_TAG = "${env.BUILD_NUMBER}" // use build number as tag
-        DOCKER_CONTEXT = "desktop-linux"
     }
     stages {
         stage('Build') {
@@ -37,6 +36,7 @@ pipeline {
         stage('Upload image') {
             steps {
                 script {
+                    sh 'docker context use default || true'
                     // sign in Docker Hub
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_credentials') {
                         // push image
