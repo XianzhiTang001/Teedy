@@ -1,53 +1,61 @@
 pipeline {
     agent any
+    environment {
+        // define environment variable
+        // Jenkins credentials configuration
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub_credentials') // Docker Hub credentials ID store in Jenkins
+        // Docker Hub Repository's name
+        DOCKER_IMAGE = 'xianzhitang/teedy-app' // your Docker Hub user name and Repository's name
+        DOCKER_TAG = "${env.BUILD_NUMBER}" // use build number as tag
+    }
     stages {
-        stage('Clean') {
+        stage('Build') {
             steps {
-                sh 'mvn clean'
+                checkout scmGit(
+                    branches: [[name: '*/master']],
+                    extensions: [],
+                    userRemoteConfigs: [[url: 'https://github.com/XianzhiTang001/Teedy.git']] // your github Repository
+                )
+                sh 'mvn -B -DskipTests clean package'
             }
         }
-        stage('Compile') {
+        // Building Docker images
+        stage('Building image') {
             steps {
-                sh 'mvn compile'
+                script {
+                    // assume Dockerfile locate at root
+                    docker.build("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}")
+                }
             }
         }
-        stage('Test') {
+        // Uploading Docker images into Docker Hub
+        stage('Upload image') {
             steps {
-                sh 'mvn test -Dmaven.test.failure.ignore=true'
-            }
-        }
-        stage('PMD') {
-            steps {
-                sh 'mvn pmd:pmd'
-            }
-        }
-        stage('JaCoCo') {
-            steps {
-                sh 'mvn jacoco:report'
-            }
-        }
-        stage('Javadoc') {
-            steps {
-                sh 'mvn javadoc:javadoc'
-            }
-        }
-        stage('Site') {
-            steps {
-                sh 'mvn site'
-            }
-        }
-stage('Package') {
-            steps {
-                sh 'mvn package -DskipTests'
+                script {
+                    // sign in Docker Hub
+                    docker.withRegistry('https://registry.hub.docker.com', 'DOCKER_HUB_CREDENTIALS') {
+                        // push image
+docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push() // :optional: label latest
+docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push('latest')
+                    }
             }
         }
     }
-    post {
-        always {
-            archiveArtifacts artifacts: '**/target/site/**/*.*', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.war', fingerprint: true
-            junit '**/target/surefire-reports/*.xml'
+        // Running Docker container
+        stage('Run containers') {
+            steps {
+                script {
+                // stop then remove containers if exists
+                sh 'docker stop teedy-container-8081 || true'
+                sh 'docker rm teedy-container-8081 || true'
+                // run Container
+                docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").run(
+                    '--name teedy-container-8081 -d -p 8081:8080'
+                )
+                // Optional: list all teedy-containers
+                sh 'docker ps --filter "name=teedy-container"'
+                }
+            }
         }
     }
 }
