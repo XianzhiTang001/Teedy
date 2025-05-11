@@ -7,6 +7,7 @@
     "validation_code": "Validation code",
     "remember_me": "Remember me",
     "submit": "Sign in",
+    "register": "Register",
     "login_as_guest": "Login as guest",
     "login_failed_title": "Login failed",
     "login_failed_message": "Username or password invalid",
