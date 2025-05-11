@@ -66,4 +66,6 @@ angular.module('docs').controller('AdminRequests', function(Restangular, $scope,
 
     };
 
+    $scope.loadRequests();
+
 });
