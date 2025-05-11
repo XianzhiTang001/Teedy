@@ -54,13 +54,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <button type="submit" class="btn btn-primary" ng-click="register()">
-                                <span class="fas fa-check"></span> {{ 'login.submit' | translate }}
+                                <span class="fas fa-check"></span> {{ 'register.submit' | translate }}
                             </button>
                         </div>
                     </div>
 
                     <p class="text-center">
-                        <a href="#/login">{{ 'register.back_to_login' | translate }}</a>
+                        <a href ng-click="goToLogin()">Back to login</a>
                     </p>
                 </form>
             </div>

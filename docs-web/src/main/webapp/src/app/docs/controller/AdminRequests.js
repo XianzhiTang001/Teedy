@@ -24,14 +24,14 @@ angular.module('docs').controller('AdminRequests', function(Restangular, $scope,
         $dialog.messageBox(title, msg, btns, function(result) {
             if (result === 'ok') {
                 Restangular.one('user/request', request.id).post('approve').then(function() {
-                    var title = $translate.instant('adminrequests.approve_success_title');
-                    var msg = $translate.instant('adminrequests.approve_success_message', { username: request.username });
+                    var title = $translate.instant('adminrequests.success_title');
+                    var msg = $translate.instant('adminrequests.success_message', { username: request.username });
                     var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
                     $dialog.messageBox(title, msg, btns);
                     $scope.loadRequests();
                 }, function() {
-                    var title = $translate.instant('adminrequests.approve_error_title');
-                    var msg = $translate.instant('adminrequests.approve_error_message', { username: request.username });
+                    var title = $translate.instant('adminrequests.error_title');
+                    var msg = $translate.instant('adminrequests.error_message', { username: request.username });
                     var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
                     $dialog.messageBox(title, msg, btns);
                 });
@@ -50,14 +50,14 @@ angular.module('docs').controller('AdminRequests', function(Restangular, $scope,
         $dialog.messageBox(title, msg, btns, function(result) {
             if (result === 'ok') {
                 Restangular.one('user/request', request.id).post('reject').then(function() {
-                    var title = $translate.instant('adminrequests.reject_success_title');
-                    var msg = $translate.instant('adminrequests.reject_success_message', { username: request.username });
+                    var title = $translate.instant('adminrequests.success_title');
+                    var msg = $translate.instant('adminrequests.success_message', { username: request.username });
                     var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
                     $dialog.messageBox(title, msg, btns);
                     $scope.loadRequests();
                 }, function() {
-                    var title = $translate.instant('adminrequests.reject_error_title');
-                    var msg = $translate.instant('adminrequests.reject_error_message', { username: request.username });
+                    var title = $translate.instant('adminrequests.error_title');
+                    var msg = $translate.instant('adminrequests.error_message', { username: request.username });
                     var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
                     $dialog.messageBox(title, msg, btns);
                 });
