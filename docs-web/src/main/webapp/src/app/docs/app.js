@@ -392,7 +392,8 @@ angular.module('docs',
       url: '',
       views: {
         'sub': {
-          templateUrl: 'partial/docs/usergroup.default.html'
+          templateUrl: 'partial/docs/usergroup.default.html',
+          controller: 'UserGroup'
         }
       }
     })

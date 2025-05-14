@@ -25,7 +25,6 @@
         color: #666;
     }
 </style>
-<!DOCTYPE html>
 <div class="row vertical-center">
     <div class="col-sm-6 col-xs-12 login-box">
         <div class="row">
@@ -34,34 +33,58 @@
 
                 <form>
                     <div class="form-group">
-                        <label class="sr-only" for="inputUsername">{{ 'register.username' | translate }}</label>
+                        <label class="sr-only" for="inputUsername">{{ 'login.username' | translate }}</label>
                         <input class="form-control" type="text" id="inputUsername" name="username"
-                               ng-attr-placeholder="{{ 'register.username' | translate }}" ng-model="userRequest.username" />
+                               ng-attr-placeholder="{{ 'login.username' | translate }}" ng-model="user.username" />
                     </div>
 
                     <div class="form-group">
-                        <label class="sr-only" for="inputUsername">{{ 'register.email' | translate }}</label>
-                        <input class="form-control" type="text" id="inputEmail" name="email"
-                               ng-attr-placeholder="{{ 'register.email' | translate }}" ng-model="userRequest.email" />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="sr-only" for="inputPassword">{{ 'register.password' | translate }}</label>
+                        <label class="sr-only" for="inputPassword">{{ 'login.password' | translate }}</label>
                         <input class="form-control" type="password" id="inputPassword" name="password"
-                               ng-attr-placeholder="{{ 'register.password' | translate }}" ng-model="userRequest.password" />
+                               ng-attr-placeholder="{{ 'login.password' | translate }}" ng-model="user.password" />
+                    </div>
+
+                    <span class="help-block" ng-if="codeRequired">
+            {{ 'login.validation_code_required' | translate }}
+            <span class="fas fa-question-circle" title="{{ 'login.validation_code_title' | translate }}"></span>
+          </span>
+                    <div class="form-group" ng-if="codeRequired">
+                        <label class="sr-only" for="inputCode">{{ 'login.validation_code' | translate }}</label>
+                        <input class="form-control" type="text" id="inputCode" name="code"
+                               ng-attr-placeholder="{{ 'login.validation_code' | translate }}" ng-model="user.code" />
+                    </div>
+
+                    <div class="checkbox text-muted">
+                        <label>
+                            <input type="checkbox" ng-model="user.remember" name="remember" /> {{ 'login.remember_me' | translate }}
+                        </label>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary" ng-click="register()">
-                                <span class="fas fa-check"></span> {{ 'register.submit' | translate }}
+                            <button type="submit" class="btn btn-primary" ng-click="login()">
+                                <span class="fas fa-check"></span> {{ 'login.submit' | translate }}
                             </button>
+                        </div>
+
+                        <div class="col-md-6 text-right btn-password-lost">
+                            <div class="well-sm">
+                                <a href ng-click="openPasswordLost()">{{ 'login.password_lost_btn' | translate }}</a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 text-left btn-password-lost">
+                            <div class="well-sm">
+                                <a href ng-click="goToRegister()">New User? Register here</a>
+                            </div>
                         </div>
                     </div>
 
-                    <p class="text-center">
-                        <a href ng-click="goToLogin()">Back to login</a>
-                    </p>
+                    <p class="text-center" ng-if="app.guest_login">&nbsp;</p>
+
+                    <button type="submit" class="btn btn-default btn-block" ng-if="app.guest_login" ng-click="loginAsGuest()">
+                        <span class="fas fa-user"></span> {{ 'login.login_as_guest' | translate }}
+                    </button>
                 </form>
             </div>
         </div>

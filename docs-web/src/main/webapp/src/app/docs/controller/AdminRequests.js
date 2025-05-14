@@ -1,6 +1,11 @@
 'use strict';
 
-angular.module('docs').controller('AdminRequests', function(Restangular, $scope,  $state, $dialog, $translate) {
+angular.module('docs').controller('AdminRequests', function(Restangular, $scope, $rootScope, $state, $dialog, $translate) {
+    // Get the app configuration
+    Restangular.one('app').get().then(function(data) {
+        $rootScope.app = data;
+    });
+
     $scope.requests = [];
 
     $scope.loadRequests = function() {
@@ -66,6 +71,8 @@ angular.module('docs').controller('AdminRequests', function(Restangular, $scope,
 
     };
 
+    $scope.goToUser = function () {
+        $state.go('user');
+    };
     $scope.loadRequests();
-
 });

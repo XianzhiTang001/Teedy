@@ -1,6 +1,11 @@
 'use strict';
 
-angular.module('docs').controller('Register', function(Restangular, $scope,  $state, $dialog, $translate) {
+angular.module('docs').controller('Register', function(Restangular, $scope, $rootScope, $state, $dialog, $translate) {
+    // Get the app configuration
+    Restangular.one('app').get().then(function(data) {
+        $rootScope.app = data;
+    });
+
     $scope.req = {
         username: '',
         email: '',
