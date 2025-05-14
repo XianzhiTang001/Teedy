@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-        DEPLOYMENT_NAME = "your-deployment"
-        CONTAINER_NAME = "your-container"
-        IMAGE_NAME = "your-dockerhub-id/your-image:version"
+        DEPLOYMENT_NAME = "hello-node"
+        CONTAINER_NAME = "hello-node-6f98659985-whxqp"
+        IMAGE_NAME = "xianzhitang/sismics/docs:v1.11"
     }
     stages {
         stage('Start Minikube') {
@@ -22,7 +22,7 @@ pipeline {
             steps {
                 sh '''
                     echo "Setting image for deployment..."
-                    kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE_
+                    kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE_NAME}
                 '''
             }
         }
