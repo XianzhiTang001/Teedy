@@ -16,14 +16,14 @@ angular.module('docs').controller('Register', function(Restangular, $scope, $roo
             var title = $translate.instant('register.error_title');
             var msg = $translate.instant('register.info_error_message');
             var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
-            $dialog.messageBox(title, msg, btns).open();
+            $dialog.messageBox(title, msg, btns);
             return;
         }
         Restangular.one('user/request').post('', $scope.req).then(function() {
             var title = $translate.instant('register.success_title');
             var msg = $translate.instant('register.success_message');
             var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
-            $dialog.messageBox(title, msg, btns).open().then(function () {
+            $dialog.messageBox(title, msg, btns).then(function () {
                 $state.go('login');
             });
         }, function () {

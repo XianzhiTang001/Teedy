@@ -29,7 +29,7 @@
     "submit": "Register",
     "back_to_login": "Back to login"
   },
-  "userReqiest": {
+  "userRequest": {
     "username": "Username",
     "email": "Email",
     "password": "Password"

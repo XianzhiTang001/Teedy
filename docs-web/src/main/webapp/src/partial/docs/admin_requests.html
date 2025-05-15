@@ -13,13 +13,13 @@
   }
 </style>
 <div class="container">
-  <h1 class="text-center">{{ 'adminrequests.title' | translate }}</h1>
+  <h1 class="text-center">Manage Requests</h1>
   <table class="table table-striped" ng-if="requests.length > 0">
     <thead>
       <tr>
-        <th>{{ 'adminrequests.username' | translate }}</th>
-        <th>{{ 'adminrequests.email' | translate }}</th>
-        <th>{{ 'adminrequests.actions' | translate }}</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -27,18 +27,21 @@
         <td>{{ request.username }}</td>
         <td>{{ request.email }}</td>
         <td>
-          <button class="btn btn-success" ng-click="approveRequest(request)">
-            <span class="fas fa-check"></span> {{ 'adminrequests.approve' | translate }}
+          <button class="btn btn-success" ng-click="approve(request)">
+            <span class="fas fa-check"></span> Approve
           </button>
-          <button class="btn btn-danger" ng-click="rejectRequest(request)">
-            <span class="fas fa-times"></span> {{ 'adminrequests.reject' | translate }}
+          <button class="btn btn-danger" ng-click="reject(request)">
+            <span class="fas fa-times"></span> Reject
           </button>
         </td>
       </tr>
     </tbody>
   </table>
-  <div ng-if="guestRequests.length === 0" class="alert alert-info text-center">
-    {{ 'adminrequests.no_requests' | translate }}
+  <div ng-if="Requests.length === 0" class="alert alert-info text-center">
+    No Requests
   </div>
+  <p class="text-center">
+    <a href ng-click="goToUser()">Back to Main</a>
+  </p>
 </div>
 

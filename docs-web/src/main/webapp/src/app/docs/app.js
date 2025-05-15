@@ -375,8 +375,12 @@ angular.module('docs',
     })
     .state('admin_requests', {
       url: '/admin/requests',
-      templateUrl: 'partial/docs/admin_requests.html',
-      controller: 'AdminRequests'
+      views: {
+        'page': {
+          templateUrl: 'partial/docs/admin_requests.html',
+          controller: 'AdminRequests'
+        }
+      }
     })
     .state('user', {
       url: '/user',
@@ -393,7 +397,6 @@ angular.module('docs',
       views: {
         'sub': {
           templateUrl: 'partial/docs/usergroup.default.html',
-          controller: 'UserGroup'
         }
       }
     })
