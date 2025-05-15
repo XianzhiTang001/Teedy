@@ -10,8 +10,9 @@ angular.module('docs').controller('AdminRequests', function(Restangular, $scope,
 
     $scope.loadRequests = function() {
         Restangular.one('user/request').get().then(function(data) {
-            $scope.requests = data;
+            $scope.requests = data.requests;
         }, function() {
+            $scope.requests = [];
             var title = $translate.instant('adminrequests.load_error_title');
             var msg = $translate.instant('adminrequests.load_error_message');
             var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
@@ -28,7 +29,7 @@ angular.module('docs').controller('AdminRequests', function(Restangular, $scope,
         ];
         $dialog.messageBox(title, msg, btns, function(result) {
             if (result === 'ok') {
-                Restangular.one('user/request', request.id).post('approve').then(function() {
+                Restangular.one('user/request').post('approve', { id: request.id }).then(function() {
                     var title = $translate.instant('adminrequests.success_title');
                     var msg = $translate.instant('adminrequests.success_message', { username: request.username });
                     var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
@@ -54,7 +55,7 @@ angular.module('docs').controller('AdminRequests', function(Restangular, $scope,
         ];
         $dialog.messageBox(title, msg, btns, function(result) {
             if (result === 'ok') {
-                Restangular.one('user/request', request.id).post('reject').then(function() {
+                Restangular.one('user/request').post('reject', { id: request.id }).then(function() {
                     var title = $translate.instant('adminrequests.success_title');
                     var msg = $translate.instant('adminrequests.success_message', { username: request.username });
                     var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];

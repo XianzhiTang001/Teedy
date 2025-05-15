@@ -69,7 +69,9 @@ public class UserRequestResource extends BaseResource {
     @Path("approve")
     public Response approve(
         @FormParam("id") String id) {
-
+        if (!authenticate()) {
+            throw new ForbiddenClientException();
+        }
         UserRequestDao userRequestDao = new UserRequestDao();
         UserRequest userRequest = userRequestDao.getById(id);
         if (userRequest == null) {
@@ -79,16 +81,23 @@ public class UserRequestResource extends BaseResource {
             throw new ClientException("NotPending", "Request is not in PENDING status");
         }
 
+
         UserDao userDao = new UserDao();
         User user = new User();
         user.setUsername(userRequest.getUsername());
         user.setEmail(userRequest.getEmail());
         user.setRoleId("user");
         user.setOnboarding(true);
+        user.setPassword(userRequest.getPassword());
+        user.setStorageQuota(1024L);
 
         try {
             userDao.create(user, principal.getId());
         } catch (Exception e) {
+            System.out.println("principal: " + principal);
+            System.out.println("principal.getId(): " + (principal != null ? principal.getId() : "null"));
+            System.out.println("Creating user: " + userRequest.getUsername());
+            e.printStackTrace();
             throw new ServerException("CreateUserFailed", "Failed to create user", e);
         }
 
@@ -104,7 +113,9 @@ public class UserRequestResource extends BaseResource {
     @Path("reject")
     public Response reject(
             @FormParam("id") String id) {
-
+        if (!authenticate()) {
+            throw new ForbiddenClientException();
+        }
         UserRequestDao userRequestDao = new UserRequestDao();
         UserRequest userRequest = userRequestDao.getById(id);
         if (userRequest == null) {
