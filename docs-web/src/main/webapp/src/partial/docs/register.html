@@ -1,0 +1,71 @@
+<style>
+    /* No navbar in login screen */
+    .navbar {
+        display: none;
+    }
+
+    /* Absolute positionned footer on top of the login background */
+    .footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border: none;
+    }
+
+    @media screen and (min-width: 768px) {
+        .footer {
+            width: 50%;
+        }
+    }
+
+    /* Smaller links everywhere on login */
+    a {
+        font-size: 90%;
+        color: #666;
+    }
+</style>
+<!DOCTYPE html>
+<div class="row vertical-center">
+    <div class="col-sm-6 col-xs-12 login-box">
+        <div class="row">
+            <div class="col-lg-offset-4 col-lg-4 col-xs-offset-1 col-xs-10">
+                <img src="img/title.png" class="img-responsive" />
+
+                <form>
+                    <div class="form-group">
+                        <label class="sr-only" for="inputUsername">Username</label>
+                        <input class="form-control" type="text" id="inputUsername" name="username"
+                               placeholder="Username" ng-model="req.username" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="sr-only" for="inputUsername">Email</label>
+                        <input class="form-control" type="email" id="inputEmail" name="email"
+                               placeholder="Email" ng-model="req.email" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="sr-only" for="inputPassword">Password</label>
+                        <input class="form-control" type="password" id="inputPassword" name="password"
+                               placeholder="Password" ng-model="req.password" />
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary" ng-click="register()">
+                                <span class="fas fa-check"></span> Register
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="text-center">
+                        <a href ng-click="goToLogin()">Back to login</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="login-img-container col-sm-6 hidden-xs"></div>
+</div>

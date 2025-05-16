@@ -7,6 +7,7 @@
     "validation_code": "Validation code",
     "remember_me": "Remember me",
     "submit": "Sign in",
+    "register": "Register",
     "login_as_guest": "Login as guest",
     "login_failed_title": "Login failed",
     "login_failed_message": "Username or password invalid",
@@ -15,6 +16,45 @@
     "password_lost_sent_message": "An email has been sent to <strong>{{ username }}</strong> to reset your password",
     "password_lost_error_title": "Password reset error",
     "password_lost_error_message": "Unable to send a password reset email, please contact your administrator for a manual reset"
+  },
+  "register": {
+    "error_title": "Error",
+    "info_error_message": "Please fill in all required fields.",
+    "success_title": "Success",
+    "success_message": "Your registration request has been submitted successfully. Please wait for approval.",
+    "server_error_message": "Password must be over 8 characters.",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Register",
+    "back_to_login": "Back to login"
+  },
+  "userRequest": {
+    "username": "Username",
+    "email": "Email",
+    "password": "Password"
+  },
+  "adminrequests": {
+    "permission_denied_title": "Permission Denied",
+    "permission_denied_message": "Sorry, only admin can manage requests.",
+    "load_error_title": "Load Error",
+    "load_error_message": "There are some errors at loading requests",
+    "approve_title": "Approve Request",
+    "approve_message": "Are you sure you want to approve this request?",
+    "reject_title": "Reject Request",
+    "reject_message": "Are you sure you want to reject this request?",
+    "success_title": "Success",
+    "success_message": "Your operation is successfully process.",
+    "error_title": "Error",
+    "error_message": "An error occurred while processing the request. Please try again later.",
+    "title": "Manage Requests",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "actions": "Action",
+    "approve": "Approve",
+    "reject": "Reject",
+    "no_requests": "No Requests"
   },
   "passwordlost": {
     "title": "Password lost",

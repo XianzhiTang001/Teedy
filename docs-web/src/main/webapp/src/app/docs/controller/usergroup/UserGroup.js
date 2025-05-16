@@ -29,4 +29,8 @@ angular.module('docs').controller('UserGroup', function(Restangular, $scope, $st
   $scope.openGroup = function(group) {
     $state.go('group.profile', { name: group.name });
   };
+
+  $scope.openAdminRequests = function () {
+    $state.go('admin_requests');
+  };
 });

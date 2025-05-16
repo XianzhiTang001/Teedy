@@ -1,0 +1,44 @@
+<style>
+  .requests-table {
+    margin: 20px 0;
+  }
+
+  .requests-table th, .requests-table td {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .requests-table .btn {
+    margin: 0 5px;
+  }
+</style>
+<div class="container">
+  <h1 class="text-center">Manage Requests</h1>
+  <table class="table table-striped" ng-if="requests.length > 0">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="request in requests">
+        <td>{{ request.username }}</td>
+        <td>{{ request.email }}</td>
+        <td>
+          <button class="btn btn-success" ng-click="approve(request)">
+            <span class="fas fa-check"></span> Approve
+          </button>
+          <button class="btn btn-danger" ng-click="reject(request)">
+            <span class="fas fa-times"></span> Reject
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div ng-if="requests.length === 0" class="alert alert-info text-center">
+    No Requests
+  </div>
+</div>
+

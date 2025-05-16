@@ -364,6 +364,24 @@ angular.module('docs',
         }
       }
     })
+    .state('register', {
+      url: '/register',
+      views: {
+        'page': {
+          templateUrl: 'partial/docs/register.html',
+          controller: 'Register'
+        }
+      }
+    })
+    .state('admin_requests', {
+      url: '/admin/requests',
+      views: {
+        'page': {
+          templateUrl: 'partial/docs/admin_requests.html',
+          controller: 'AdminRequests'
+        }
+      }
+    })
     .state('user', {
       url: '/user',
       abstract: true,
@@ -378,7 +396,7 @@ angular.module('docs',
       url: '',
       views: {
         'sub': {
-          templateUrl: 'partial/docs/usergroup.default.html'
+          templateUrl: 'partial/docs/usergroup.default.html',
         }
       }
     })
