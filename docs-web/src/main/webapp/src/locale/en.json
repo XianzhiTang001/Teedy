@@ -22,7 +22,7 @@
     "info_error_message": "Please fill in all required fields.",
     "success_title": "Success",
     "success_message": "Your registration request has been submitted successfully. Please wait for approval.",
-    "server_error_message": "An error occurred while submitting your request. Please try again later.",
+    "server_error_message": "Password must be over 8 characters.",
     "username": "Username",
     "email": "Email",
     "password": "Password",
@@ -35,6 +35,8 @@
     "password": "Password"
   },
   "adminrequests": {
+    "permission_denied_title": "Permission Denied",
+    "permission_denied_message": "Sorry, only admin can manage requests.",
     "load_error_title": "Load Error",
     "load_error_message": "There are some errors at loading requests",
     "approve_title": "Approve Request",
