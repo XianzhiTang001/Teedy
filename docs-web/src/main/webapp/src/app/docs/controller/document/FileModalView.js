@@ -4,6 +4,10 @@
  * File modal view controller.
  */
 angular.module('docs').controller('FileModalView', function ($uibModalInstance, $scope, $state, $stateParams, $sce, Restangular, $transitions) {
+
+  $scope.translatedContent = ''; // 用于存储翻译内容
+  $scope.selectedLanguage = 'en'; // 默认目标语言为英语
+
   var setFile = function (files) {
     // Search current file
     _.each(files, function (value) {
@@ -122,5 +126,26 @@ angular.module('docs').controller('FileModalView', function ($uibModalInstance, 
    */
   $scope.canDisplayPreview = function () {
     return $scope.file && $scope.file.mimetype !== 'application/pdf';
+  };
+
+
+  /**
+   * Translate the currently opened file.
+   */
+  $scope.translateFile = function(targetLang) {
+    if (!targetLang || !$scope.file.id) {
+      console.error('Invalid target language or file ID.');
+      return;
+    }
+
+    Restangular.one('file', $scope.file.id)
+        .customPOST($.param({ targetLang: targetLang }), 'translate', {}, { 'Content-Type': 'application/x-www-form-urlencoded' })
+        .then(function(response) {
+          $scope.translatedContent = response.translatedText; // 显示翻译后的内容
+          $scope.error = null;
+        }, function(error) {
+          $scope.error = $translate.instant('file.view.translation_error');
+          console.error('Translation error:', error);
+        });
   };
 });

@@ -49,6 +49,7 @@ import com.sismics.util.JsonUtil;
 import com.sismics.util.context.ThreadLocalContext;
 import com.sismics.util.mime.MimeType;
 import jakarta.json.Json;
+import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.ws.rs.Consumes;
@@ -75,6 +76,11 @@ import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
@@ -88,6 +94,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
+import java.util.ResourceBundle;
+
 
 /**
  * Document REST resources.
@@ -96,6 +104,16 @@ import java.util.UUID;
  */
 @Path("/document")
 public class DocumentResource extends BaseResource {
+    private static final String API_KEY;
+    private static final String ENDPOINT;
+    private static final String REGION;
+
+    static {
+        ResourceBundle bundle = ResourceBundle.getBundle("application");
+        API_KEY = bundle.getString("microsoft.translator.apiKey");
+        ENDPOINT = bundle.getString("microsoft.translator.endpoint");
+        REGION = bundle.getString("microsoft.translator.region");
+    }
 
     /**
      * Returns a document.
@@ -1026,6 +1044,59 @@ public class DocumentResource extends BaseResource {
         JsonObjectBuilder response = Json.createObjectBuilder()
                 .add("status", "ok");
         return Response.ok().entity(response.build()).build();
+    }
+
+    @POST
+    @Path("{id: [a-z0-9\\-]+}/translate")
+    public Response translateDocument(
+            @PathParam("id") String documentId,
+            @FormParam("targetLang") String targetLang) {
+        if (!authenticate()) {
+            throw new ForbiddenClientException();
+        }
+
+        // Validate targetLang
+        if (StringUtils.isBlank(targetLang)) {
+            throw new ClientException("ValidationError", "Target language is required.");
+        }
+
+        // Get the document content
+        DocumentDao documentDao = new DocumentDao();
+        DocumentDto documentDto = documentDao.getDocument(documentId, PermType.READ, getTargetIdList(null));
+        if (documentDto == null) {
+            throw new NotFoundException();
+        }
+
+        String textToTranslate = documentDto.getDescription();
+        if (StringUtils.isBlank(textToTranslate)) {
+            throw new ClientException("ValidationError", "Document has no content to translate.");
+        }
+
+        try {
+            // 构造 Microsoft Translator API 请求
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(ENDPOINT + "/translate?api-version=3.0&to=" + targetLang))
+                    .header("Ocp-Apim-Subscription-Key", API_KEY)
+                    .header("Ocp-Apim-Subscription-Region", REGION)
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(
+                            "[{\"Text\":\"" + textToTranslate + "\"}]"
+                    ))
+                    .build();
+
+            // 发送请求并解析响应
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            JsonArray jsonArray = Json.createReader(new StringReader(response.body())).readArray();
+            String translatedText = jsonArray.getJsonObject(0).getJsonArray("translations")
+                    .getJsonObject(0).getString("text");
+
+            JsonObjectBuilder jsonResponse = Json.createObjectBuilder()
+                    .add("translatedText", translatedText);
+            return Response.ok(jsonResponse.build()).build();
+        } catch (Exception e) {
+            throw new ServerException("TranslationError", "Error translating document", e);
+        }
     }
 
     /**

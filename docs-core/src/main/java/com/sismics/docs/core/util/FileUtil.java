@@ -20,6 +20,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -270,5 +272,41 @@ public class FileUtil {
             log.debug("Can't find size of file " + fileId, e);
             return File.UNKNOWN_SIZE;
         }
+    }
+
+    public static String translateFileContent(File file, String targetLang) throws IOException, Exception {
+        // 检查文件类型是否支持
+        String fileType = file.getMimeType();
+        if (!fileType.equalsIgnoreCase("text/plain") && !fileType.equalsIgnoreCase("application/pdf")) {
+            throw new IOException("UnsupportedFileType: Only text and PDF files are supported.");
+        }
+
+        // 提取文件内容
+        String fileContent;
+        if (fileType.equalsIgnoreCase("text/plain")) {
+            // 读取纯文本文件内容
+            Path filePath = DirectoryUtil.getStorageDirectory().resolve(file.getId());
+            try (InputStream inputStream = Files.newInputStream(filePath)) {
+                fileContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                throw new IOException("May be invalid txt file.", e);
+            }
+        } else if (fileType.equalsIgnoreCase("application/pdf")) {
+            // 读取 PDF 文件内容
+            Path filePath = DirectoryUtil.getStorageDirectory().resolve(file.getId());
+            try (InputStream inputStream = Files.newInputStream(filePath)) {
+                PDDocument document = PDDocument.load(inputStream);
+                PDFTextStripper pdfStripper = new PDFTextStripper();
+                fileContent = pdfStripper.getText(document);
+                document.close();
+            } catch (IOException e) {
+                throw new IOException("May be invalid pdf file.", e);
+            }
+        } else {
+            throw new IOException("UnsupportedFileType: Unexpected file type.");
+        }
+
+        // 调用 Microsoft Translator API 翻译内容
+        return MicrosoftTranslatorUtil.translate(fileContent, targetLang);
     }
 }

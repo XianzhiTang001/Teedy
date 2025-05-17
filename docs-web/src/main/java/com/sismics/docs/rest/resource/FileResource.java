@@ -717,6 +717,37 @@ public class FileResource extends BaseResource {
         return sendZippedFiles("files", fileList);
     }
 
+    @POST
+    @Path("{fileId: [a-z0-9\\-]+}/translate")
+    public Response translateFile(
+            @PathParam("fileId") String fileId,
+            @FormParam("targetLang") String targetLang) {
+        if (!authenticate()) {
+            throw new ForbiddenClientException();
+        }
+
+        // 验证输入参数
+        if (Strings.isNullOrEmpty(targetLang)) {
+            throw new ClientException("ValidationError", "Target language is required.");
+        }
+
+        // 获取文件
+        File file = findFile(fileId, null);
+
+        // 翻译文件内容
+        String translatedText;
+        try {
+            translatedText = FileUtil.translateFileContent(file, targetLang);
+        } catch (Exception e) {
+            throw new ServerException("TranslationError", "Error translating file content", e);
+        }
+
+        // 返回翻译结果
+        JsonObjectBuilder response = Json.createObjectBuilder()
+                .add("translatedText", translatedText);
+        return Response.ok(response.build()).build();
+    }
+
     /**
      * Sent the content of a list of files.
      */

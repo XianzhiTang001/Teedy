@@ -147,6 +147,9 @@
       "workflow_comment": "Add a workflow comment",
       "workflow_validated_title": "Workflow step validated",
       "workflow_validated_message": "The workflow step has been successfully validated.",
+      "translation_error": "Translation failed. Please try again.",
+      "translate": "Translate",
+      "translated_content": "Translated Content",
       "content": {
         "content": "Content",
         "delete_file_title": "Delete file",
@@ -238,11 +241,20 @@
       "submit": "Share"
     }
   },
+  "language": {
+    "english": "English",
+    "chinese": "中文",
+    "french": "Français",
+    "spanish": "Español"
+  },
   "file": {
     "view": {
       "previous": "Previous",
       "next": "Next",
-      "not_found": "File not found"
+      "not_found": "File not found",
+      "translate": "Translate",
+      "translated_file_content": "Translated File Content",
+      "translation_error": "An error occurred during translation."
     },
     "edit": {
       "title": "Edit file",
