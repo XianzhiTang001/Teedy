@@ -5,6 +5,24 @@
     </button>
   </div>
 
+  <div class="text-center" style="margin-bottom: 20px;">
+    <select id="languageSelect" ng-model="selectedLanguage" class="form-control-inline">
+      <option value="en">{{ 'language.english' | translate }}</option>
+      <option value="zh">{{ 'language.chinese' | translate }}</option>
+      <option value="fr">{{ 'language.french' | translate }}</option>
+      <option value="es">{{ 'language.spanish' | translate }}</option>
+    </select>
+    <button class="btn btn-primary" ng-click="translateFile(selectedLanguage)">
+      <span class="fas fa-globe"></span> {{ 'file.view.translate' | translate }}
+    </button>
+  </div>
+
+  <!-- Show the translated content -->
+  <div ng-if="translatedContent" class="well">
+    <h3>{{ 'file.view.translated_file_content' | translate }}</h3>
+    <p>{{ translatedContent }}</p>
+  </div>
+
   <div class="btn-group">
     <button type="button" class="btn btn-default"
             ng-style="{ 'visibility': previousFile() ? 'visible' : 'hidden' }"

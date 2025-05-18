@@ -42,6 +42,35 @@
     &nbsp;
   </div>
 
+  <div class="pull-right dropdown" uib-dropdown>
+    <button class="btn btn-default" uib-dropdown-toggle>
+      <span class="fas fa-language"></span>
+      Translate
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <select id="languageSelect" ng-model="selectedLanguage" class="form-control">
+          <option value="en">{{ 'language.english' | translate }}</option>
+          <option value="zh">{{ 'language.chinese' | translate }}</option>
+          <option value="fr">{{ 'language.french' | translate }}</option>
+          <option value="es">{{ 'language.spanish' | translate }}</option>
+        </select>
+      </li>
+      <li>
+        <button class="btn btn-primary" ng-click="translateDocument(selectedLanguage)">
+          <span class="fas fa-globe"></span> {{ 'document.view.translate' | translate }}
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Show the translated content -->
+  <div ng-if="translatedContent" class="well">
+    <h3>{{ 'document.view.translated_content' | translate }}</h3>
+    <p>{{ translatedContent }}</p>
+  </div>
+
 	<div class="page-header">
 	  <h1>
       {{ document.title }}

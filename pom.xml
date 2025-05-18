@@ -565,6 +565,12 @@
         <artifactId>junit-jupiter</artifactId>
         <version>5.7.1</version>
       </dependency>
+
+      <dependency>
+        <groupId>com.googlecode.juniversalchardet</groupId>
+        <artifactId>juniversalchardet</artifactId>
+        <version>1.0.3</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

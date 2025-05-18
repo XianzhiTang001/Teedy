@@ -29,11 +29,7 @@ import com.sismics.docs.core.model.context.AppContext;
 import com.sismics.docs.core.model.jpa.Document;
 import com.sismics.docs.core.model.jpa.File;
 import com.sismics.docs.core.model.jpa.User;
-import com.sismics.docs.core.util.ConfigUtil;
-import com.sismics.docs.core.util.DocumentUtil;
-import com.sismics.docs.core.util.FileUtil;
-import com.sismics.docs.core.util.MetadataUtil;
-import com.sismics.docs.core.util.PdfUtil;
+import com.sismics.docs.core.util.*;
 import com.sismics.docs.core.util.jpa.PaginatedList;
 import com.sismics.docs.core.util.jpa.PaginatedLists;
 import com.sismics.docs.core.util.jpa.SortCriteria;
@@ -49,6 +45,7 @@ import com.sismics.util.JsonUtil;
 import com.sismics.util.context.ThreadLocalContext;
 import com.sismics.util.mime.MimeType;
 import jakarta.json.Json;
+import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.ws.rs.Consumes;
@@ -75,6 +72,11 @@ import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
@@ -88,6 +90,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
+import java.util.ResourceBundle;
+
 
 /**
  * Document REST resources.
@@ -1026,6 +1030,42 @@ public class DocumentResource extends BaseResource {
         JsonObjectBuilder response = Json.createObjectBuilder()
                 .add("status", "ok");
         return Response.ok().entity(response.build()).build();
+    }
+
+    @POST
+    @Path("{id: [a-z0-9\\-]+}/translate")
+    public Response translateDocument(
+            @PathParam("id") String documentId,
+            @FormParam("targetLang") String targetLang) {
+        if (!authenticate()) {
+            throw new ForbiddenClientException();
+        }
+
+        // Validate targetLang
+        if (StringUtils.isBlank(targetLang)) {
+            throw new ClientException("ValidationError", "Target language is required.");
+        }
+
+        // Get the document content
+        DocumentDao documentDao = new DocumentDao();
+        DocumentDto documentDto = documentDao.getDocument(documentId, PermType.READ, getTargetIdList(null));
+        if (documentDto == null) {
+            throw new NotFoundException();
+        }
+
+        String textToTranslate = documentDto.getDescription();
+        if (StringUtils.isBlank(textToTranslate)) {
+            throw new ClientException("ValidationError", "Document has no content to translate.");
+        }
+
+        try {
+            String translatedText = MicrosoftTranslatorUtil.translate(textToTranslate, targetLang);
+            JsonObjectBuilder jsonResponse = Json.createObjectBuilder()
+                    .add("translatedText", translatedText);
+            return Response.ok(jsonResponse.build()).build();
+        } catch (Exception e) {
+            throw new ServerException("TranslationError", "Error translating document", e);
+        }
     }
 
     /**

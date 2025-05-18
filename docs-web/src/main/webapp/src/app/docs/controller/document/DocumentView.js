@@ -3,7 +3,10 @@
 /**
  * Document view controller.
  */
-angular.module('docs').controller('DocumentView', function ($scope, $rootScope, $state, $stateParams, $location, $dialog, $uibModal, Restangular, $translate) {
+angular.module('docs').controller('DocumentView', function ($scope, $rootScope, $state, $stateParams, $location, $dialog, $uibModal, Restangular, $translate, $http) {
+
+  $scope.translatedContent = '';
+
   // Load document data from server
   Restangular.one('document', $stateParams.id).get().then(function (data) {
     $scope.document = data;
@@ -163,5 +166,20 @@ angular.module('docs').controller('DocumentView', function ($scope, $rootScope, 
         $state.go('document.default');
       }
     });
+  };
+
+  $scope.translateDocument = function (targetLang) {
+    if (!targetLang || !$scope.document || !$scope.document.id) {
+      return;
+    }
+
+    Restangular.one('document', $scope.document.id)
+        .customPOST($.param({ targetLang: targetLang }), 'translate', {}, { 'Content-Type': 'application/x-www-form-urlencoded' })
+        .then(function (response) {
+          $scope.translatedContent = response.translatedText; // 更新翻译文本
+        }, function (error) {
+          $scope.error = $translate.instant('document.view.translation_error');
+          console.error('Translation error:', error);
+        });
   };
 });
