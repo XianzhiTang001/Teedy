@@ -29,11 +29,7 @@ import com.sismics.docs.core.model.context.AppContext;
 import com.sismics.docs.core.model.jpa.Document;
 import com.sismics.docs.core.model.jpa.File;
 import com.sismics.docs.core.model.jpa.User;
-import com.sismics.docs.core.util.ConfigUtil;
-import com.sismics.docs.core.util.DocumentUtil;
-import com.sismics.docs.core.util.FileUtil;
-import com.sismics.docs.core.util.MetadataUtil;
-import com.sismics.docs.core.util.PdfUtil;
+import com.sismics.docs.core.util.*;
 import com.sismics.docs.core.util.jpa.PaginatedList;
 import com.sismics.docs.core.util.jpa.PaginatedLists;
 import com.sismics.docs.core.util.jpa.SortCriteria;
@@ -104,16 +100,6 @@ import java.util.ResourceBundle;
  */
 @Path("/document")
 public class DocumentResource extends BaseResource {
-    private static final String API_KEY;
-    private static final String ENDPOINT;
-    private static final String REGION;
-
-    static {
-        ResourceBundle bundle = ResourceBundle.getBundle("application");
-        API_KEY = bundle.getString("microsoft.translator.apiKey");
-        ENDPOINT = bundle.getString("microsoft.translator.endpoint");
-        REGION = bundle.getString("microsoft.translator.region");
-    }
 
     /**
      * Returns a document.
@@ -1073,24 +1059,7 @@ public class DocumentResource extends BaseResource {
         }
 
         try {
-            // 构造 Microsoft Translator API 请求
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(ENDPOINT + "/translate?api-version=3.0&to=" + targetLang))
-                    .header("Ocp-Apim-Subscription-Key", API_KEY)
-                    .header("Ocp-Apim-Subscription-Region", REGION)
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(
-                            "[{\"Text\":\"" + textToTranslate + "\"}]"
-                    ))
-                    .build();
-
-            // 发送请求并解析响应
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            JsonArray jsonArray = Json.createReader(new StringReader(response.body())).readArray();
-            String translatedText = jsonArray.getJsonObject(0).getJsonArray("translations")
-                    .getJsonObject(0).getString("text");
-
+            String translatedText = MicrosoftTranslatorUtil.translate(textToTranslate, targetLang);
             JsonObjectBuilder jsonResponse = Json.createObjectBuilder()
                     .add("translatedText", translatedText);
             return Response.ok(jsonResponse.build()).build();

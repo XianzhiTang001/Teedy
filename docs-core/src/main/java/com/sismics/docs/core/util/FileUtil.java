@@ -32,10 +32,12 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import org.mozilla.universalchardet.UniversalDetector;
 
 /**
  * File entity utilities.
@@ -287,7 +289,10 @@ public class FileUtil {
             // 读取纯文本文件内容
             Path filePath = DirectoryUtil.getStorageDirectory().resolve(file.getId());
             try (InputStream inputStream = Files.newInputStream(filePath)) {
-                fileContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                byte[] fileBytes = inputStream.readAllBytes();
+                String charset = detectCharset(fileBytes);
+                fileContent = new String(inputStream.readAllBytes(), Charset.forName(charset));
+                System.out.println("This is the words: " + fileContent);
             } catch (IOException e) {
                 throw new IOException("May be invalid txt file.", e);
             }
@@ -298,6 +303,7 @@ public class FileUtil {
                 PDDocument document = PDDocument.load(inputStream);
                 PDFTextStripper pdfStripper = new PDFTextStripper();
                 fileContent = pdfStripper.getText(document);
+                System.out.println("This is the words: " + fileContent);
                 document.close();
             } catch (IOException e) {
                 throw new IOException("May be invalid pdf file.", e);
@@ -308,5 +314,14 @@ public class FileUtil {
 
         // 调用 Microsoft Translator API 翻译内容
         return MicrosoftTranslatorUtil.translate(fileContent, targetLang);
+    }
+
+    private static String detectCharset(byte[] bytes) {
+        UniversalDetector detector = new UniversalDetector(null);
+        detector.handleData(bytes, 0, bytes.length);
+        detector.dataEnd();
+        String encoding = detector.getDetectedCharset();
+        detector.reset();
+        return encoding != null ? encoding : "UTF-8"; // 默认使用 UTF-8
     }
 }
