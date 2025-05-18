@@ -23,7 +23,6 @@ public class MicrosoftTranslatorUtil {
     }
 
     public static String translate(String text, String targetLang) throws Exception {
-        // 构造 HTTP 请求
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(ENDPOINT + "/translate?api-version=3.0&to=" + targetLang))
@@ -35,13 +34,11 @@ public class MicrosoftTranslatorUtil {
                 ))
                 .build();
 
-        // 处理响应
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200) {
             throw new Exception("TranslationError: " + response.body());
         }
 
-        // 解析响应 JSON
         JsonArray jsonArray = Json.createReader(new StringReader(response.body())).readArray();
         return jsonArray.getJsonObject(0).getJsonArray("translations")
                 .getJsonObject(0).getString("text");

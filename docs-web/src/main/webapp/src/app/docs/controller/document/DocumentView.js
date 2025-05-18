@@ -173,7 +173,6 @@ angular.module('docs').controller('DocumentView', function ($scope, $rootScope, 
       return;
     }
 
-    // 调用后端的翻译 API
     Restangular.one('document', $scope.document.id)
         .customPOST($.param({ targetLang: targetLang }), 'translate', {}, { 'Content-Type': 'application/x-www-form-urlencoded' })
         .then(function (response) {

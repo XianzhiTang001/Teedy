@@ -18,6 +18,7 @@ import com.sismics.docs.core.model.jpa.User;
 import com.sismics.docs.core.util.DirectoryUtil;
 import com.sismics.docs.core.util.EncryptionUtil;
 import com.sismics.docs.core.util.FileUtil;
+import com.sismics.docs.core.util.MicrosoftTranslatorUtil;
 import com.sismics.rest.exception.ClientException;
 import com.sismics.rest.exception.ForbiddenClientException;
 import com.sismics.rest.exception.ServerException;
@@ -718,31 +719,33 @@ public class FileResource extends BaseResource {
     }
 
     @POST
-    @Path("{fileId: [a-z0-9\\-]+}/translate")
+    @Path("{id: [a-z0-9\\-]+}/translate")
     public Response translateFile(
-            @PathParam("fileId") String fileId,
+            @PathParam("id") String fileId,
             @FormParam("targetLang") String targetLang) {
         if (!authenticate()) {
             throw new ForbiddenClientException();
         }
 
-        // 验证输入参数
         if (Strings.isNullOrEmpty(targetLang)) {
             throw new ClientException("ValidationError", "Target language is required.");
         }
 
-        // 获取文件
-        File file = findFile(fileId, null);
+        // Call the existing function
+        String fileContent;
+        try {
+            fileContent = data(fileId, null, "content").getEntity().toString(); // 调用现有方法获取内容
+        } catch (Exception e) {
+            throw new ServerException("FileReadError", "Error reading file content", e);
+        }
 
-        // 翻译文件内容
         String translatedText;
         try {
-            translatedText = FileUtil.translateFileContent(file, targetLang);
+            translatedText = MicrosoftTranslatorUtil.translate(fileContent, targetLang);
         } catch (Exception e) {
             throw new ServerException("TranslationError", "Error translating file content", e);
         }
 
-        // 返回翻译结果
         JsonObjectBuilder response = Json.createObjectBuilder()
                 .add("translatedText", translatedText);
         return Response.ok(response.build()).build();

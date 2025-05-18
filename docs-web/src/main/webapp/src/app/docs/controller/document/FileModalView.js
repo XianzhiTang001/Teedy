@@ -141,7 +141,7 @@ angular.module('docs').controller('FileModalView', function ($uibModalInstance, 
     Restangular.one('file', $scope.file.id)
         .customPOST($.param({ targetLang: targetLang }), 'translate', {}, { 'Content-Type': 'application/x-www-form-urlencoded' })
         .then(function(response) {
-          $scope.translatedContent = response.translatedText; // 显示翻译后的内容
+          $scope.translatedContent = response.translatedText;
           $scope.error = null;
         }, function(error) {
           $scope.error = $translate.instant('file.view.translation_error');
